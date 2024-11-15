@@ -29,7 +29,7 @@ jobs:
         install: sqlengine, sqlpackage
 
     - name: Run sqlclient
-      run: sqlcmd -S localhost -U {{ secrets.TestDb_USERNAME }} -P {{ secrets.TestDb_PASSWORD }} -d {{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
+      run: sqlcmd -S "localhost" -U {{ secrets.TestDb_USERNAME }} -P {{ secrets.TestDb_PASSWORD }} -d {{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
 
 
         #Setup a Java JDK
