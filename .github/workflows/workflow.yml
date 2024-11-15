@@ -27,9 +27,10 @@ jobs:
       uses: potatoqualitee/mssqlsuite@v1.7
       with:
         install: sqlengine, sqlpackage
+        sa-password: ${{ secrets.TestDb_PASSWORD }}
 
     - name: Run sqlclient
-      run: sqlcmd -S localhost -U ${{ secrets.TestDb_USERNAME }} -P ${{ secrets.TestDb_PASSWORD }} -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
+      run: sqlcmd -S localhost -U sa -P ${{ secrets.TestDb_PASSWORD }} -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
 
 
         #Setup a Java JDK
