@@ -20,7 +20,7 @@ jobs:
         sa-password: lyf4vuoe!wn!ytr7i985@vb
 
     - name: Run sqlclient
-      run: sqlcmd -S localhost -U sa -P lyf4vuoe!wn!ytr7i985@vb -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
+      run: sqlcmd -S localhost -U sa -P "lyf4vuoe!wn!ytr7i985@vb" -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
 
 
 
