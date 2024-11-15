@@ -12,6 +12,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+      
+    - name: Download SqlServer
+      uses: potatoqualitee/mssqlsuite@v1.7
+      with:
+        install: sqlengine, sqlpackage
+        sa-password: lyf4vuoewnytr7i985vb
+
+    - name: Run sqlclient
+      run: sqlcmd -S localhost -U sa -P lyf4vuoewnytr7i985vb -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
+
+
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -22,16 +34,6 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore ./Pipeline/Pipeline/Pipeline.csproj
-
-    - name: Download SqlServer
-      uses: potatoqualitee/mssqlsuite@v1.7
-      with:
-        install: sqlengine, sqlpackage
-        sa-password: ${{ secrets.TestDb_PASSWORD }}
-
-    - name: Run sqlclient
-      run: sqlcmd -S localhost -U sa -P ${{ secrets.TestDb_PASSWORD }} -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
-
 
         #Setup a Java JDK
     - name: Set up JDK 17
