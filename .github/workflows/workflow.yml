@@ -75,6 +75,11 @@ jobs:
         ConnectionStrings__BooksDb: ${{ secrets.TestDb_CONNECTION_STRING }}
       run: dotnet build ./Pipeline/Pipeline/Pipeline.csproj --framework net8.0
 
+    - name: Test Migration
+      run: |
+        dotnet ef migrations add ${{ github.run_number }}
+        dotnet ef database update
+
     - name: test
       env:
         ConnectionStrings__BooksDb: ${{ secrets.TestDb_CONNECTION_STRING }}
