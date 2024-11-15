@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace Pipeline
 {
@@ -28,9 +30,12 @@ namespace Pipeline
     /**Database context for book database*/
     class BookDb : DbContext
     {
-        static readonly string connectionString = "Server=localhost; User ID=root; Password=admin; Database=book";
-
         public DbSet<Book> Books { get; set; } = null!;
+
+        IConfigurationRoot config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,7 +49,10 @@ namespace Pipeline
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            SqlServerDbContextOptionsBuilder contextOptionsBuilder = new SqlServerDbContextOptionsBuilder(optionsBuilder);
+            contextOptionsBuilder.EnableRetryOnFailure();
+            String connectionString = config.GetConnectionString("BooksDb");
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }
