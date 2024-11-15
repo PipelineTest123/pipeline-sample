@@ -24,9 +24,9 @@ jobs:
       run: dotnet restore ./Pipeline/Pipeline/Pipeline.csproj
 
     - name: Build project
-      run: dotnet build ./Pipeline/Pipeline/Pipeline.csproj
+      run: dotnet build ./Pipeline/Pipeline/Pipeline.csproj --framework net8.0
 
     - name: test
-      run: dotnet test ./Pipeline/Pipeline.sln
+      run: dotnet test ./Pipeline/Pipeline.sln --framework net8.0
 
     
