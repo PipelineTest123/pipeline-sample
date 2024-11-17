@@ -12,6 +12,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+      
+    - name: Download SqlServer
+      uses: potatoqualitee/mssqlsuite@v1.7
+      with:
+        install: sqlengine, sqlpackage
+
+    - name: Run sqlclient
+      run: sqlcmd -S localhost -U sa -P dbatools.I0 -d tempdb -Q "SELECT @@version;"
+
+
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -22,6 +33,11 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore ./Pipeline/Pipeline/Pipeline.csproj
+
+    - name: Install Tools
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool install --global dotnet-coverage
 
         #Setup a Java JDK
     - name: Set up JDK 17
@@ -62,10 +78,19 @@ jobs:
         ./.sonar/scanner/dotnet-sonarscanner begin /k:"PipelineTest123_pipeline-sample" /o:"pipelinetest123" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.scanner.scanAll=false /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
 
     - name: Build project
+      env:
+        ConnectionStrings__BooksDb: ${{ secrets.TestDb_CONNECTION_STRING }}
       run: dotnet build ./Pipeline/Pipeline/Pipeline.csproj --framework net8.0
 
+    - name: Test Migration
+      run: |
+        dotnet ef migrations add ${{ github.run_number }} --project ./Pipeline/Pipeline/Pipeline.csproj
+        dotnet ef database update --connection "${{ secrets.TestDb_CONNECTION_STRING }}" --project ./Pipeline/Pipeline/Pipeline.csproj
+
     - name: test
-      run: dotnet test ./Pipeline/Pipeline.sln --framework net8.0
+      env:
+        ConnectionStrings__BooksDb: ${{ secrets.TestDb_CONNECTION_STRING }}
+      run: dotnet-coverage collect "dotnet test ./Pipeline/Pipeline.sln --framework net8.0" -f xml -o "coverage.xml"
 
     - name: End Sonar Analysis
       env:
