@@ -88,7 +88,7 @@ jobs:
     - name: test
       env:
         ConnectionStrings__BooksDb: ${{ secrets.TestDb_CONNECTION_STRING }}
-      run: dotnet test ./Pipeline/Pipeline.sln --framework net8.0
+      run: dotnet-coverage collect "dotnet test ./Pipeline/Pipeline.sln --framework net8.0" -f xml -o "coverage.xml"
 
     - name: End Sonar Analysis
       env:
