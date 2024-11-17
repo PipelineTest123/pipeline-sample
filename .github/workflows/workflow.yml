@@ -83,7 +83,9 @@ jobs:
     - name: Test Migration
       run: |
         dotnet ef migrations add ${{ github.run_number }} --project ./Pipeline/Pipeline/Pipeline.csproj
-        dotnet ef database update --project ./Pipeline/Pipeline/Pipeline.csproj
+        cd ./Pipeline/Pipeline/
+        dotnet ef database update
+        cd /
 
     - name: test
       env:
