@@ -19,7 +19,7 @@ jobs:
         install: sqlengine, sqlpackage
 
     - name: Run sqlclient
-      run: sqlcmd -S localhost -U sa -P "dbatools.I0" -d ${{ secrets.TestDb_DATABASE }} -Q "SELECT @@version;"
+      run: sqlcmd -S localhost -U sa -P dbatools.I0 -d tempdb -Q "SELECT @@version;"
 
 
 
