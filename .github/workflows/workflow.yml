@@ -83,7 +83,7 @@ jobs:
     - name: Test Migration
       run: |
         dotnet ef migrations add ${{ github.run_number }} --project ./Pipeline/Pipeline/Pipeline.csproj
-        dotnet ef database update --connection ${{ secrets.TestDb_CONNECTION_STRING }}
+        dotnet ef database update --connection "${{ secrets.TestDb_CONNECTION_STRING }}"
 
     - name: test
       env:
